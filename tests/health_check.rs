@@ -27,9 +27,6 @@ async fn health_check_works() {
 // if we fail to perform the required setup we can just panic and crash
 // all the things.
 fn spawn_app() {
-    let server = newsletter::run().expect("Failed to bind address");
-    // Launch the server as a background task
-    // tokio::spawn returns a handle to the spawned future,
-    // but we have no use for it here, hence the non-binding let
+    let server = newsletter::run("127.0.0.1:0").expect("Failed to bind address");
     let _ = tokio::spawn(server);
 }
