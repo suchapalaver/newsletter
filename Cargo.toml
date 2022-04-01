@@ -1,3 +1,4 @@
+#! Cargo.toml
 [package]
 name = "newsletter"
 version = "0.1.0"
@@ -17,6 +18,11 @@ path = "src/lib.rs"
 [[bin]]
 path = "src/main.rs"
 name = "newsletter"
+
+# Dev dependencies are used exclusively when running tests or examples
+# They do not get included in the final application binary!
+[dev-dependencies]
+reqwest = "0.11"
 
 [dependencies]
 actix-web = "4.0.0"
