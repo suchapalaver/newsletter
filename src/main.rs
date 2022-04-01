@@ -1,18 +1,17 @@
 //! src/main.rs
-//! Hello World! example on actix-web’s homepage:
-use actix_web::{web, App, HttpRequest, HttpServer, Responder};
-async fn greet(req: HttpRequest) -> impl Responder {
-    let name = req.match_info().get("name").unwrap_or("World");
-    format!("Hello {}!", &name)
+//! Launch the application first in another terminal with `cargo run`
+//! curl -v http://127.0.0.1:8000/health_check
+use actix_web::{web, App, HttpResponse, HttpServer, Responder};
+async fn health_check() -> impl Responder {
+    HttpResponse::Ok()
 }
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
-            .route("/", web::get().to(greet))
-            .route("/{name}", web::get().to(greet))
+            .route("/health_check", web::get().to(health_check))
     })
-    .bind("127.0.0.1:8000")?
-    .run()
-    .await
+        .bind("127.0.0.1:8000")?
+        .run()
+        .await
 }
