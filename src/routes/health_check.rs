@@ -1,6 +1,6 @@
 //! src/routes/health_check.rs
 
-use actix_web::{HttpResponse};
+use actix_web::HttpResponse;
 
 // We were returning `impl Responder` at the very beginning.
 // We are now spelling out the type explicitly given that we have
