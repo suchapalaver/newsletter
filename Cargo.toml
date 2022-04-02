@@ -33,3 +33,27 @@ config = "0.11"
 # unnecessary dependencies for projects that do not need it.
 serde = { version = "1", features = ["derive"]}
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+
+# Using table-like toml syntax to avoid a super-long line!
+[dependencies.sqlx]
+version = "0.5.7"
+default-features = false
+features = [
+    "runtime-actix-rustls",
+    # tells sqlx to use the actix runtime for its futures and rustls as TLS
+    # backend
+    "macros",
+    # gives us access to sqlx::query! and sqlx::query_as!, which we will be using exten-
+    # sively
+    "postgres",
+    # unlocks Postgres-specific functionality (e.g. non-standard SQL types)
+    "uuid",
+    # adds support for mapping SQL UUIDs to the Uuid type from the uuid crate. We need it
+    # to work with our id column
+    "chrono",
+    # adds support for mapping SQL timestamptz to the DateTime<T> type from the chrono
+    # crate. We need it to work with our subscribed_at column
+    "migrate"
+    # gives us access to the same functions used under the hood by sqlx-cli to manage
+    # migrations. It will turn out to be useful for our test suite.
+]
