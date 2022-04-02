@@ -26,6 +26,7 @@ reqwest = "0.11"
 
 [dependencies]
 actix-web = "4.0.0"
+config = "0.11"
 # We need the optional `derive` feature to use `serde`'s procedural macros:
 # `#[derive(Serialize)]` and `#[derive(Deserialize)]`.
 # The feature is not enabled by default to avoid pulling in
