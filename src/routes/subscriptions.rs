@@ -1,7 +1,8 @@
 //! src/routes/subscriptions.rs
 use actix_web::{web, HttpResponse};
 use chrono::Utc;
-use sqlx::PgConnection;
+// No longer importing PgConnection!
+use sqlx::PgPool;
 use uuid::Uuid;
 
 #[allow(dead_code)]
@@ -13,13 +14,13 @@ pub struct FormData {
 
 pub async fn subscribe(
     form: web::Form<FormData>,
-    connection: web::Data<PgConnection>,
+    pool: web::Data<PgPool>, // Renamed!
 ) -> HttpResponse {
     sqlx::query!(
         r#"
-INSERT INTO subscriptions (id, email, name, subscribed_at)
-VALUES ($1, $2, $3, $4)
-"#,
+        INSERT INTO subscriptions (id, email, name, subscribed_at)
+        VALUES ($1, $2, $3, $4)
+        "#,
         Uuid::new_v4(),
         form.email,
         form.name,
@@ -27,7 +28,8 @@ VALUES ($1, $2, $3, $4)
     )
     // We use `get_ref` to get an immutable reference to the `PgConnection`
     // wrapped by `web::Data`.
-    .execute(connection.get_ref())
+    // Using the pool as a drop-in replacement
+    .execute(pool.get_ref())
     .await;
     HttpResponse::Ok().finish()
 }
