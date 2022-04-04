@@ -16,6 +16,11 @@ pub async fn subscribe(
     form: web::Form<FormData>,
     pool: web::Data<PgPool>, // Renamed!
 ) -> HttpResponse {
+    log::info!(
+        "Adding '{}' '{}' as a new subscriber.",
+        form.email,
+        form.name
+    );
     log::info!("Saving new subscriber details in the database");
     match sqlx::query!(
         r#"
@@ -33,7 +38,7 @@ pub async fn subscribe(
         Ok(_) => {
             log::info!("New subscriber details have been saved");
             HttpResponse::Ok().finish()
-        },
+        }
         Err(e) => {
             log::error!("Failed to execute query: {:?}", e);
             HttpResponse::InternalServerError().finish()
