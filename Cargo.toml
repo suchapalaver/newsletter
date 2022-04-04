@@ -36,6 +36,7 @@ log = "0.4"
 # unnecessary dependencies for projects that do not need it.
 serde = { version = "1", features = ["derive"]}
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+tracing = { version = "0.1", features = ["log"] }
 uuid = { version = "0.8.1", features = ["v4"] }
 
 # Using table-like toml syntax to avoid a super-long line!
