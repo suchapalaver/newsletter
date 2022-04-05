@@ -12,12 +12,21 @@ pub struct FormData {
     name: String,
 }
 
-pub async fn subscribe(
-    form: web::Form<FormData>,
-    pool: web::Data<PgPool>, // Renamed!
-) -> HttpResponse {
-    // Let's generate a random unique identifier
+pub async fn subscribe(form: web::Form<FormData>, pool: web::Data<PgPool>) -> HttpResponse {
     let request_id = Uuid::new_v4();
+    // Spans, like logs, have an associated level
+    // `info_span` creates a span at the info-level
+    let request_span = tracing::info_span!(
+        "Adding a new subscriber.",
+        %request_id,
+        subscriber_email = %form.email,
+        subscriber_name = %form.name
+    );
+    // info_span returns the newly created span,
+    // but we have to explicitly step into it using
+    // the .enter() method to activate it.
+    let _request_span_guard = request_span.enter();
+
     tracing::info!(
         "request_id {} - Adding '{}' '{}' as a new subscriber.",
         request_id,
