@@ -27,10 +27,12 @@ pub async fn subscribe(form: web::Form<FormData>, pool: web::Data<PgPool>) -> Ht
     // but we have to explicitly step into it using
     // the .enter() method to activate it.
     let _request_span_guard = request_span.enter();
+
     // We do not call `.enter` on query_span!
     // `.instrument` takes care of it at the right moments
     // in the query future lifetime
     let query_span = tracing::info_span!("Saving new subscriber details in the database");
+
     match sqlx::query!(
         r#"
         INSERT INTO subscriptions (id, email, name, subscribed_at)
