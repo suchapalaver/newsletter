@@ -27,6 +27,8 @@ pub async fn subscribe(form: web::Form<FormData>, pool: web::Data<PgPool>) -> Ht
     // but we have to explicitly step into it using
     // the .enter() method to activate it.
     let _request_span_guard = request_span.enter();
+    // Enters this span, returning a guard that
+    // will exit the span when dropped.
 
     // We do not call `.enter` on query_span!
     // `.instrument` takes care of it at the right moments
