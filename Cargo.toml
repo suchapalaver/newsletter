@@ -48,21 +48,22 @@ uuid = { version = "0.8.1", features = ["v4"] }
 version = "0.5.7"
 default-features = false
 features = [
-    "runtime-actix-rustls",
     # tells sqlx to use the actix runtime for its futures and rustls as TLS
     # backend
-    "macros",
+    "runtime-actix-rustls",
     # gives us access to sqlx::query! and sqlx::query_as!, which we will be using exten-
     # sively
-    "postgres",
+    "macros",
     # unlocks Postgres-specific functionality (e.g. non-standard SQL types)
-    "uuid",
+    "postgres",
     # adds support for mapping SQL UUIDs to the Uuid type from the uuid crate. We need it
     # to work with our id column
-    "chrono",
+    "uuid",
     # adds support for mapping SQL timestamptz to the DateTime<T> type from the chrono
     # crate. We need it to work with our subscribed_at column
-    "migrate"
+    "chrono",
     # gives us access to the same functions used under the hood by sqlx-cli to manage
     # migrations. It will turn out to be useful for our test suite.
+    "migrate",
+    "offline"
 ]
