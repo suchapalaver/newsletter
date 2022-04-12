@@ -17,6 +17,9 @@ static TRACING: Lazy<()> = Lazy::new(|| {
     // because the sink is part of the type returned by `get_subscriber`, therefore they are not the
     // same type. We could work around it, but this is the most straight-forward way of moving forward.
     //
+    // If TEST_LOG is set, we use std::io::stdout.
+    // If TEST_LOG is not set, we send all logs into the void using std::io::sink.
+    //
     // When you want to see all logs coming out of a certain test case to debug it you can run
     // # Using the `bunyan` CLI to prettify the outputted logs
     // # The original `bunyan` requires NPM, but you can install a Rust-port with
