@@ -1,6 +1,6 @@
 //! src/configuration.rs
-use secrecy::Secret;
 use secrecy::ExposeSecret;
+use secrecy::Secret;
 
 #[derive(serde::Deserialize)]
 pub struct Settings {
@@ -29,7 +29,8 @@ impl DatabaseSettings {
             "postgres://{}:{}@{}:{}/{}",
             self.username,
             self.password.expose_secret(),
-            self.host, self.port,
+            self.host,
+            self.port,
             self.database_name
         ))
     }
