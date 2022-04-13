@@ -60,6 +60,11 @@ pub fn get_configuration() -> Result<Settings, config::ConfigError> {
         .try_into()
         .expect("Failed to parse APP_ENVIRONMENT.");
 
+    // Layer on the environment-specific values.
+    settings.merge(
+        config::File::from(configuration_directory.join(environment.as_str())).required(true),
+    )?;
+
     // Try to convert the configuration values it read into
     // our Settings type
     settings.try_into()
