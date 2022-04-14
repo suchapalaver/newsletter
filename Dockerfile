@@ -22,9 +22,24 @@ ENV SQLX_OFFLINE true
 RUN cargo build --release
 
 # Runtime stage
-FROM rust:1.59.0-slim AS runtime
+FROM debian:bullseye-slim AS runtime
+
+# see below for why these two ENV lines
+# https://github.com/phusion/baseimage-docker/issues/319
+ENV DEBIAN_FRONTEND=noninteractive
+ENV DEBCONF_NOWARNINGS="yes"
 
 WORKDIR /app
+
+# Install OpenSSL - it is dynamically linked by some of our dependencies
+# Install ca-certificates - it is needed to verify TLS certificates
+# when establishing HTTPS connections
+RUN apt-get update -y \
+    && apt-get install -y --no-install-recommends openssl ca-certificates \
+    # Clean up
+    && apt-get autoremove -y \
+    && apt-get clean -y \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy the compiled binary from the builder environment
 # to our runtime environment
