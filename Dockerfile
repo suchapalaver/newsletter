@@ -39,11 +39,6 @@ RUN cargo build --release --bin newsletter
 # Runtime stage
 FROM debian:bullseye-slim AS runtime
 
-# see below for why these two ENV lines
-# https://github.com/phusion/baseimage-docker/issues/319
-ENV DEBIAN_FRONTEND=noninteractive
-ENV DEBCONF_NOWARNINGS="yes"
-
 WORKDIR /app
 
 # Install OpenSSL - it is dynamically linked by some of our dependencies
