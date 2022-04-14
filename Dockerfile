@@ -1,12 +1,10 @@
-FROM lukemathwalker/cargo-chef:latest-rust-1.59.0 as chef
+FROM lukemathwalker/cargo-chef:latest-rust-1.53.0 as chef
 
 # Let's switch our working directory to `app` (equivalent to `cd app`)
 # The `app` folder will be created for us by Docker in case it does not
 # exist already.
 WORKDIR /app
 
-# Install the required system dependencies for our linking configuration
-RUN apt update && apt install lld clang -y
 
 FROM chef as planner
 
@@ -45,7 +43,7 @@ WORKDIR /app
 # Install ca-certificates - it is needed to verify TLS certificates
 # when establishing HTTPS connections
 RUN apt-get update -y \
-    && apt-get install -y --no-install-recommends openssl ca-certificates \
+    && apt-get install -y --no-install-recommends openssl \
     # Clean up
     && apt-get autoremove -y \
     && apt-get clean -y \
