@@ -62,10 +62,9 @@ async fn spawn_app() -> TestApp {
 
 pub async fn configure_database(config: &DatabaseSettings) -> PgPool {
     // Create database
-    let mut connection =
-        PgConnection::connect_with(&config.without_db())
-            .await
-            .expect("Failed to connect to Postgres");
+    let mut connection = PgConnection::connect_with(&config.without_db())
+        .await
+        .expect("Failed to connect to Postgres");
     connection
         .execute(format!(r#"CREATE DATABASE "{}";"#, config.database_name).as_str())
         .await
@@ -164,8 +163,9 @@ async fn subscribe_returns_a_400_when_data_is_missing() {
 }
 
 #[tokio::test]
-async fn subscribe_returns_a_200_when_fields_are_present_but_empty() {
-// Arrange
+// Renamed!
+async fn subscribe_returns_a_400_when_fields_are_present_but_invalid() {
+    // Arrange
     let app = spawn_app().await;
     let client = reqwest::Client::new();
     let test_cases = vec![
@@ -174,7 +174,7 @@ async fn subscribe_returns_a_200_when_fields_are_present_but_empty() {
         ("name=Ursula&email=definitely-not-an-email", "invalid email"),
     ];
     for (body, description) in test_cases {
-// Act
+        // Act
         let response = client
             .post(&format!("{}/subscriptions", &app.address))
             .header("Content-Type", "application/x-www-form-urlencoded")
@@ -182,11 +182,12 @@ async fn subscribe_returns_a_200_when_fields_are_present_but_empty() {
             .send()
             .await
             .expect("Failed to execute request.");
-// Assert
+        // Assert
         assert_eq!(
-            200,
+            // Not 200 anymore!
+            400,
             response.status().as_u16(),
-            "The API did not return a 200 OK when the payload was {}.",
+            "The API did not return a 400 Bad Request when the payload was {}.",
             description
         );
     }
