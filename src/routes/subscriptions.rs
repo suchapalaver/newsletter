@@ -48,6 +48,7 @@ pub async fn subscribe(form: web::Form<FormData>, pool: web::Data<PgPool>) -> Ht
 
 /// Returns `true` if the input satisfies all our validation constraints
 /// on subscriber names, `false` otherwise.
+//  functions like `is_valid_name` give us a false sense of safety
 pub fn is_valid_name(s: &str) -> bool {
     // `.trim()` returns a view over the input `s` without trailing
     // whitespace-like characters.
