@@ -42,7 +42,8 @@ pub async fn subscribe(form: web::Form<FormData>, pool: web::Data<PgPool>) -> Ht
     // `form.0` gives us access to the underlying `FormData`
     let new_subscriber = NewSubscriber {
         email: form.0.email,
-        name: SubscriberName::parse(form.0.name),
+        // Notice the usage of `expect` to specify a meaningful panic message
+        name: SubscriberName::parse(form.0.name).expect("Name validation failed."),
     };
     match insert_subscriber(&pool, &new_subscriber).await {
         Ok(_) => HttpResponse::Ok().finish(),
