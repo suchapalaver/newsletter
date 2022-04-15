@@ -9,6 +9,13 @@ pub struct NewSubscriber {
 pub struct SubscriberName(String);
 
 impl SubscriberName {
+    pub fn inner_ref(&self) -> &str {
+        // The caller gets a shared reference to the inner string.
+        // This gives the caller **read-only** access,
+        // they have no way to compromise our invariants!
+        &self.0
+    }
+
     /// Returns an instance of `SubscriberName` if the input satisfies all
     /// our validation constraints on subscriber names.
     /// It panics otherwise.
