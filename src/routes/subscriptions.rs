@@ -69,8 +69,8 @@ pub async fn insert_subscriber(
         "#,
         Uuid::new_v4(),
         new_subscriber.email,
-        // Using `inner_ref`!
-        new_subscriber.name.inner_ref(),
+        // Using `as_ref` now!
+        new_subscriber.name.as_ref(),
         Utc::now()
     )
     .execute(pool)
