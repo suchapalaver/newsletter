@@ -4,7 +4,6 @@ use crate::domain::{NewSubscriber, SubscriberName};
 use actix_web::{web, HttpResponse};
 use chrono::Utc;
 use sqlx::PgPool;
-use unicode_segmentation::UnicodeSegmentation;
 use uuid::Uuid;
 
 #[derive(serde::Deserialize)]
@@ -67,10 +66,11 @@ pub async fn insert_subscriber(
         r#"
     INSERT INTO subscriptions (id, email, name, subscribed_at)
     VALUES ($1, $2, $3, $4)
-            "#,
+        "#,
         Uuid::new_v4(),
         new_subscriber.email,
-        new_subscriber.name,
+        // Using `inner_ref`!
+        new_subscriber.name.inner_ref(),
         Utc::now()
     )
     .execute(pool)
