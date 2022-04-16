@@ -22,6 +22,10 @@ name = "newsletter"
 # Dev dependencies are used exclusively when running tests or examples
 # They do not get included in the final application binary!
 [dev-dependencies]
+# We are not using fake >= 2.4 because it relies on rand 0.8
+# which has been recently released and it is not yet used by
+# quickcheck (solved in its upcoming 1.0 release!)
+fake = "~2.3"
 reqwest = "0.11"
 
 [dependencies]
