@@ -6,6 +6,7 @@ pub struct NewSubscriber {
     pub name: SubscriberName,
 }
 
+#[derive(Debug)]
 pub struct SubscriberName(String);
 
 impl SubscriberName {
