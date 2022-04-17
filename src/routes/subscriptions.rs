@@ -12,10 +12,14 @@ pub struct FormData {
     name: String,
 }
 
-pub fn parse_subscriber(form: FormData) -> Result<NewSubscriber, String> {
-    let name = SubscriberName::parse(form.0.name)?;
-    let email = SubscriberEmail::parse(form.0.email)?;
-    Ok(NewSubscriber { email, name })
+impl TryFrom<FormData> for NewSubscriber {
+    type Error = String;
+
+    fn try_from(value: FormData) -> Result<Self, Self::Error> {
+        let name = SubscriberName::parse(value.name)?;
+        let email = SubscriberEmail::parse(value.email)?;
+        Ok(Self { email, name })
+    }
 }
 
 // `#[tracing::instrument]` creates a span
@@ -47,8 +51,8 @@ pub async fn subscribe(
     form: web::Form<FormData>,
     pool: web::Data<PgPool>
 ) -> HttpResponse {
-    let new_subscriber = match parse_subscriber(form.0) {
-        Ok(subscriber) => subscriber,
+    let new_subscriber = match form.0.try_into() {
+        Ok(form) => form,
         Err(_) => return HttpResponse::BadRequest().finish(),
     };
     match insert_subscriber(&pool, &new_subscriber).await {
