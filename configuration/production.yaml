@@ -4,3 +4,8 @@ application:
 database:
   # New entry!
   require_ssl: true
+email_client:
+  # Value retrieved from Postmark's API documentation
+  base_url: "https://api.postmarkapp.com"
+  # Use the single sender email you authorised on Postmark!
+  sender_email: "jfl322@nyu.edu"
