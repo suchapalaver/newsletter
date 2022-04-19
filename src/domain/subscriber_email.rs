@@ -23,12 +23,12 @@ impl AsRef<str> for SubscriberEmail {
 
 #[cfg(test)]
 mod tests {
-    use claim::assert_err;
     use super::SubscriberEmail;
+    use claim::assert_err;
     // We are importing the `SafeEmail` faker!
     // We also need the `Fake` trait to get access to the
     // `.fake` method on `SafeEmail`
-    use fake::{Fake, faker::internet::en::SafeEmail};
+    use fake::{faker::internet::en::SafeEmail, Fake};
     #[test]
     fn empty_string_is_rejected() {
         let email = "".to_string();

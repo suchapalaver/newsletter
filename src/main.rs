@@ -1,9 +1,9 @@
 //! src/main.rs
 use newsletter::{
+    configuration::get_configuration,
     email_client::EmailClient,
     startup::run,
-    configuration::get_configuration,
-    telemetry::{get_subscriber, init_subscriber}
+    telemetry::{get_subscriber, init_subscriber},
 };
 use sqlx::postgres::PgPoolOptions;
 use std::net::TcpListener;
@@ -21,12 +21,11 @@ async fn main() -> std::io::Result<()> {
         .connect_lazy_with(configuration.database.with_db());
 
     // Build an `EmailClient` using `configuration`
-    let sender_email = configuration.email_client.sender()
+    let sender_email = configuration
+        .email_client
+        .sender()
         .expect("Invalid sender email address.");
-    let email_client = EmailClient::new(
-        configuration.email_client.base_url,
-        sender_email
-    );
+    let email_client = EmailClient::new(configuration.email_client.base_url, sender_email);
 
     let address = format!(
         "{}:{}",

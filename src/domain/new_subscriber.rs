@@ -1,7 +1,7 @@
 //! src/domain/new_subscriber.rs
 
-use crate::domain::SubscriberName;
 use crate::domain::SubscriberEmail;
+use crate::domain::SubscriberName;
 
 pub struct NewSubscriber {
     // We are not using `String` anymore!
