@@ -40,6 +40,7 @@ impl EmailClient {
     }
 }
 
+#[derive(serde::Serialize)]
 struct SendEmailRequest {
     from: String,
     to: String,
