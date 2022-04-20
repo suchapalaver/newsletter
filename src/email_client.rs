@@ -24,7 +24,11 @@ impl EmailClient {
         html_content: &str,
         text_content: &str,
     ) -> Result<(), String> {
-        // No matter the input
+        // **To do**:
+        // You can do better using `reqwest::Url::join` if you change
+        // `base_url`'s type from `String` to `reqwest::Url`.
+        let url = format!("{}/email", self.base_url);
+        let builder = self.http_client.post(&url);
         Ok(())
     }
 }
