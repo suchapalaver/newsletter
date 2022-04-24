@@ -100,5 +100,6 @@ mod tests {
             .await;
 
         // Assert
+        // Mock expectations are checked on drop
     }
 }
