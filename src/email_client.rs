@@ -89,6 +89,7 @@ mod tests {
         Mock::given(header_exists("X-Postmark-Server-Token"))
             .and(header("Content-Type", "application/json"))
             .and(path("/email"))
+            .and(method("POST"))
             .respond_with(ResponseTemplate::new(200))
             .expect(1)
             .mount(&mock_server)
