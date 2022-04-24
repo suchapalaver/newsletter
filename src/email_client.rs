@@ -75,8 +75,10 @@ mod tests {
     use fake::faker::lorem::en::{Paragraph, Sentence};
     use fake::{Fake, Faker};
     use secrecy::Secret;
-    use wiremock::matchers::any;
+    // We removed `any` from the import list
+    use wiremock::matchers::header_exists;
     use wiremock::{Mock, MockServer, ResponseTemplate};
+
     #[tokio::test]
     async fn send_email_fires_a_request_to_base_url() {
         // Arrange
@@ -84,7 +86,7 @@ mod tests {
         let sender = SubscriberEmail::parse(SafeEmail().fake()).unwrap();
         let email_client = EmailClient::new(mock_server.uri(), sender, Secret::new(Faker.fake()));
 
-        Mock::given(any())
+        Mock::given(header_exists("X-Postmark-Server-Token"))
             .respond_with(ResponseTemplate::new(200))
             .expect(1)
             .mount(&mock_server)
