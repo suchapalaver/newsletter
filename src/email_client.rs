@@ -48,9 +48,12 @@ impl EmailClient {
             .post(&url)
             .header(
                 "X-Postmark-Server-Token",
-                self.authorization_token.expose_secret()
+                self.authorization_token.expose_secret(),
             )
-            .json(&request_body);
+            .json(&request_body)
+            .send()
+            // send is asynchronous, therefore we need to await the future it returns.
+            .await?;
         Ok(())
     }
 }
