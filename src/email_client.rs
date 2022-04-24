@@ -76,7 +76,7 @@ mod tests {
     use fake::{Fake, Faker};
     use secrecy::Secret;
     // We removed `any` from the import list
-    use wiremock::matchers::header_exists;
+    use wiremock::matchers::{header, header_exists, path, method};
     use wiremock::{Mock, MockServer, ResponseTemplate};
 
     #[tokio::test]
@@ -87,6 +87,7 @@ mod tests {
         let email_client = EmailClient::new(mock_server.uri(), sender, Secret::new(Faker.fake()));
 
         Mock::given(header_exists("X-Postmark-Server-Token"))
+            .and(header("Content-Type", "application/json"))
             .respond_with(ResponseTemplate::new(200))
             .expect(1)
             .mount(&mock_server)
