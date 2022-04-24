@@ -31,7 +31,7 @@ impl EmailClient {
         subject: &str,
         html_content: &str,
         text_content: &str,
-    ) -> Result<(), String> {
+    ) -> Result<(), reqwest::Error> {
         // **To do**:
         // You can do better using `reqwest::Url::join` if you change
         // `base_url`'s type from `String` to `reqwest::Url`.
@@ -43,7 +43,7 @@ impl EmailClient {
             html_body: html_content.to_owned(),
             text_body: text_content.to_owned(),
         };
-        let builder = self
+        let _builder = self
             .http_client
             .post(&url)
             .header(
