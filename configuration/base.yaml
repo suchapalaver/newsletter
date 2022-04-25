@@ -17,3 +17,4 @@ email_client:
   # we'll deal with the production token outside of version control
   # (given that it's a sensitive secret!)
   authorization_token: "my-secret-token"
+  timeout_milliseconds: 10000
