@@ -19,10 +19,7 @@ impl EmailClient {
         // New argument!
         timeout: std::time::Duration,
     ) -> Self {
-        let http_client = Client::builder()
-            .timeout(timeout)
-            .build()
-            .unwrap();
+        let http_client = Client::builder().timeout(timeout).build().unwrap();
         Self {
             http_client,
             base_url,
@@ -106,9 +103,15 @@ mod tests {
         SubscriberEmail::parse(SafeEmail().fake()).unwrap()
     }
 
-    /// Get a test instance of `EmailClient`.
+    /// Get a test instance of `EmailClient`
     fn email_client(base_url: String) -> EmailClient {
-        EmailClient::new(base_url, email(), Secret::new(Faker.fake()))
+        EmailClient::new(
+            base_url,
+            email(),
+            Secret::new(Faker.fake()),
+            // Much lower than 10s!
+            std::time::Duration::from_millis(200),
+        )
     }
 
     struct SendEmailBodyMatcher;
