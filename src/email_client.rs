@@ -44,7 +44,9 @@ impl EmailClient {
             html_body: html_content,
             text_body: text_content,
         };
-        let _builder = self
+
+        // Builder
+        self
             .http_client
             .post(&url)
             .header(
@@ -54,7 +56,10 @@ impl EmailClient {
             .json(&request_body)
             .send()
             // send is asynchronous, therefore we need to await the future it returns.
-            .await?;
+            .await?
+            // `reqwest::Response` `error_for_status`
+            // "Turn a response into an error if the server returned an error."
+            .error_for_status()?;
         Ok(())
     }
 }
