@@ -1,5 +1,7 @@
 //! src/routes/subscriptions.rs
 use crate::domain::{NewSubscriber, SubscriberEmail, SubscriberName};
+// New import!
+use crate::email_client::EmailClient;
 
 use actix_web::{web, HttpResponse};
 use chrono::Utc;
@@ -41,21 +43,41 @@ impl TryFrom<FormData> for NewSubscriber {
     // the message associated to the function span
     // - if omitted, it defaults to the function name.
     name = "Adding a new subscriber",
-    skip(form, pool),
+    skip(form, pool, email_client),
     fields(
         subscriber_email = %form.email,
         subscriber_name= %form.name
     )
 )]
-pub async fn subscribe(form: web::Form<FormData>, pool: web::Data<PgPool>) -> HttpResponse {
+pub async fn subscribe(
+    form: web::Form<FormData>,
+    pool: web::Data<PgPool>,
+    // Get the email client from the app context
+    email_client: web::Data<EmailClient>,
+) -> HttpResponse {
     let new_subscriber = match form.0.try_into() {
         Ok(form) => form,
         Err(_) => return HttpResponse::BadRequest().finish(),
     };
-    match insert_subscriber(&pool, &new_subscriber).await {
-        Ok(_) => HttpResponse::Ok().finish(),
-        Err(_) => HttpResponse::InternalServerError().finish(),
+
+    if insert_subscriber(&pool, &new_subscriber).await.is_err() {
+        return HttpResponse::InternalServerError().finish();
     }
+    // Send a (useless) email to the new subscriber.
+    // We are ignoring email delivery errors for now.
+    if email_client
+        .send_email(
+            new_subscriber.email,
+            "Welcome!",
+            "Welcome to our newsletter!",
+            "Welcome to our newsletter!",
+        )
+        .await
+        .is_err()
+    {
+        return HttpResponse::InternalServerError().finish();
+    }
+    HttpResponse::Ok().finish()
 }
 
 // `insert_subscriber` takes care of the
