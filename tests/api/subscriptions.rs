@@ -88,18 +88,13 @@ async fn subscribe_sends_a_confirmation_email_for_valid_data() {
     Mock::given(path("/email"))
         .and(method("POST"))
         .respond_with(ResponseTemplate::new(200))
-        // We are not setting an expectation here anymore
-        // The test is focused on another aspect of the app
-        // behaviour.
+        .expect(1)
         .mount(&app.email_server)
         .await;
 
-    // Act
+// Act
     app.post_subscriptions(body.into()).await;
 
-    // Assert
-    // Get the first intercepted request
-    let email_request = &app.email_server.received_requests().await.unwrap()[0];
-    // Parse the body as JSON, starting from raw bytes
-    let body: serde_json::Value = serde_json::from_slice(&email_request.body).unwrap();
+// Assert
+// Mock asserts on drop
 }
