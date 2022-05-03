@@ -39,7 +39,7 @@ async fn subscribe_persists_the_new_subscriber() {
     app.post_subscriptions(body.into()).await;
 
     // Assert
-    let saved = sqlx::query!("SELECT email, name FROM subscriptions",)
+    let saved = sqlx::query!("SELECT email, name, status FROM subscriptions",)
         .fetch_one(&app.db_pool)
         .await
         .expect("Failed to fetch saved subscription.");
