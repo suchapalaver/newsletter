@@ -64,11 +64,7 @@ pub async fn subscribe(
     if insert_subscriber(&pool, &new_subscriber).await.is_err() {
         return HttpResponse::InternalServerError().finish();
     }
-    if send_confirmation_email(
-        &email_client,
-        new_subscriber,
-        &base_url.0
-        )
+    if send_confirmation_email(&email_client, new_subscriber, &base_url.0)
         .await
         .is_err()
     {
@@ -88,7 +84,10 @@ pub async fn send_confirmation_email(
     base_url: &str,
 ) -> Result<(), reqwest::Error> {
     // Build a confirmation link with a dynamic root
-    let confirmation_link = format!("{}/subscriptions/confirm", base_url);
+    let confirmation_link = format!(
+        "{}/subscriptions/confirm?subscription_token=mytoken",
+        base_url
+    );
     let plain_body = format!(
         "Welcome to our newsletter!\nVisit {} to confirm your subscription.",
         confirmation_link
@@ -101,12 +100,7 @@ pub async fn send_confirmation_email(
     // Send a (useless) email to the new subscriber.
     // We are ignoring email delivery errors for now.
     email_client
-        .send_email(
-            new_subscriber.email,
-            "Welcome!",
-            &html_body,
-            &plain_body
-        )
+        .send_email(new_subscriber.email, "Welcome!", &html_body, &plain_body)
         .await
 }
 
