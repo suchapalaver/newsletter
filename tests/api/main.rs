@@ -1,6 +1,6 @@
 //! tests/api/main.rs
-mod helpers;
 mod health_check;
+mod helpers;
 mod subscriptions;
 // New module!
 mod subscriptions_confirm;

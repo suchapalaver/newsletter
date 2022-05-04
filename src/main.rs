@@ -1,7 +1,7 @@
 //! src/main.rs
 use newsletter::{
     configuration::get_configuration,
-    startup::{Application},
+    startup::Application,
     telemetry::{get_subscriber, init_subscriber},
 };
 

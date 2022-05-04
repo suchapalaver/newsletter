@@ -80,8 +80,8 @@ pub async fn subscribe(
         &base_url.0,
         &subscription_token,
     )
-        .await
-        .is_err()
+    .await
+    .is_err()
     {
         return HttpResponse::InternalServerError().finish();
     }
