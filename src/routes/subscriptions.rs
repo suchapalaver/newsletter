@@ -63,9 +63,6 @@ pub async fn subscribe(
         Ok(form) => form,
         Err(_) => return HttpResponse::BadRequest().finish(),
     };
-    if insert_subscriber(&pool, &new_subscriber).await.is_err() {
-        return HttpResponse::InternalServerError().finish();
-    }
     let subscriber_id = match insert_subscriber(&pool, &new_subscriber).await {
         Ok(subscriber_id) => subscriber_id,
         Err(_) => return HttpResponse::InternalServerError().finish(),
@@ -83,8 +80,8 @@ pub async fn subscribe(
         &base_url.0,
         &subscription_token,
     )
-    .await
-    .is_err()
+        .await
+        .is_err()
     {
         return HttpResponse::InternalServerError().finish();
     }
@@ -102,7 +99,7 @@ pub async fn store_token(
 ) -> Result<(), sqlx::Error> {
     sqlx::query!(
         r#"INSERT INTO subscription_tokens (subscription_token, subscriber_id)
-VALUES ($1, $2)"#,
+        VALUES ($1, $2)"#,
         subscription_token,
         subscriber_id
     )
