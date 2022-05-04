@@ -125,11 +125,12 @@ pub async fn send_confirmation_email(
 pub async fn insert_subscriber(
     pool: &PgPool,
     new_subscriber: &NewSubscriber,
-) -> Result<(), sqlx::Error> {
+) -> Result<Uuid, sqlx::Error> {
+    let subscriber_id = Uuid::new_v4();
     sqlx::query!(
         r#"INSERT INTO subscriptions (id, email, name, subscribed_at, status)
         VALUES ($1, $2, $3, $4, 'pending_confirmation')"#,
-        Uuid::new_v4(),
+        subscriber_id,
         new_subscriber.email.as_ref(),
         new_subscriber.name.as_ref(),
         Utc::now()
@@ -140,7 +141,7 @@ pub async fn insert_subscriber(
         tracing::error!("Failed to execute query: {:?}", e);
         e
     })?;
-    Ok(())
+    Ok(subscriber_id)
 }
 
 /// Generate a random 25-characters-long case-sensitive subscription token.
